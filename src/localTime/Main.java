@@ -27,11 +27,6 @@ public class Main {
         Period period  = Period.of(1, 1, 1);
         System.out.println(period.addTo(LocalDate.of(2000, 2, 22)));
         Instant instant  = Instant.EPOCH;
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd 'T' HH:mm", Locale.ENGLISH);
-        OffsetDateTime instant2 = OffsetDateTime.parse("1991-04-15T21:30+04:00", dtf);
-
-        System.out.println(instant2); // 27833
          }
 
 }

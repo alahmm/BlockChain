@@ -30,27 +30,35 @@ class StringUtil {
 
     public static void main(String[] args) {
         System.out.print("Enter how many zeros the hash must start with:");
-        Scanner scanner = new Scanner(System.in);
-        int howManyZeros = scanner.nextInt();
         String hashOfThePreviousBlock = "";
         String hashOfTheBlock;
         long timeStamp;
+        int N = 0;
         for (int i = 1; i < 6; i++) {
             timeStamp = new Date().getTime();
 
             if (i == 1) {
                 hashOfThePreviousBlock = "0";
+
             }
             String zeros = "";
             int j = 0;
-            while (j < howManyZeros) {
+            while (j < N) {
                 zeros += 0;
                 j ++;
             }
             input = input + hashOfThePreviousBlock + timeStamp;
             hashOfTheBlock = zeros + StringUtil.applySha256(input);
-            hashOfTheBlock = hashOfTheBlock.substring(0, hashOfTheBlock.length() - j);
-            System.out.println(BlockChain.newBlockGenerator(i, timeStamp, hashOfTheBlock, hashOfThePreviousBlock));
+            hashOfTheBlock = hashOfTheBlock.substring(0, hashOfTheBlock.length() - N);
+
+
+            if (i < 3) {
+                N++;
+            } else if (i > 3) {
+                N--;
+            }
+            System.out.println(BlockChain.newBlockGenerator(i, timeStamp, hashOfTheBlock, hashOfThePreviousBlock, N));
+
             hashOfThePreviousBlock = hashOfTheBlock;
 
             System.out.println();
@@ -59,10 +67,12 @@ class StringUtil {
     }
 }
 class BlockChain {
-    public static String newBlockGenerator (int id, long timeStamp, String hashOfTheBlock, String hashOfThePreviousBlock) {
+    public static String newBlockGenerator (int id, long timeStamp, String hashOfTheBlock, String hashOfThePreviousBlock, int N) {
         double time = System.nanoTime() / 1000000000.0;
         long newTime = Math.round(time);
+        String thread = new Thread().getName();
         String str = String.format("Block:\n" +
+                "Created by miner # %d\n" +
                 "Id: %d\n" +
                 "Timestamp: %d\n" +
                 "Magic number: %d\n" +
@@ -70,7 +80,17 @@ class BlockChain {
                 "%s\n" +
                 "Hash of the block: \n" +
                 "%s\n" +
-                "Block was generating for %d seconds", id, timeStamp, ThreadLocalRandom.current().nextLong(Long.MAX_VALUE), hashOfThePreviousBlock, hashOfTheBlock, newTime);
+                "Block was generating for %d seconds", Integer.parseInt(String.valueOf(thread.charAt(thread.length() - 1))),
+                id, timeStamp, ThreadLocalRandom.current().nextLong(Long.MAX_VALUE), hashOfThePreviousBlock, hashOfTheBlock, newTime);
+
+        if (id < 3) {
+            str += String.format("\nN was increased to %d", N);
+        } else if (id > 3) {
+            str += "\nN was decreased by 1";
+
+        } else {
+            str += "\nN stays the same";
+        }
 
         return str;
     }

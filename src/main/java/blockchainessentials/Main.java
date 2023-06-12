@@ -2,6 +2,7 @@ package blockchainessentials;
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
 }
@@ -28,6 +29,9 @@ class StringUtil {
     }
 
     public static void main(String[] args) {
+        System.out.print("Enter how many zeros the hash must start with:");
+        Scanner scanner = new Scanner(System.in);
+        int howManyZeros = scanner.nextInt();
         String hashOfThePreviousBlock = "";
         String hashOfTheBlock;
         long timeStamp;
@@ -37,8 +41,15 @@ class StringUtil {
             if (i == 1) {
                 hashOfThePreviousBlock = "0";
             }
+            String zeros = "";
+            int j = 0;
+            while (j < howManyZeros) {
+                zeros += 0;
+                j ++;
+            }
             input = input + hashOfThePreviousBlock + timeStamp;
-            hashOfTheBlock = StringUtil.applySha256(input);
+            hashOfTheBlock = zeros + StringUtil.applySha256(input);
+            hashOfTheBlock = hashOfTheBlock.substring(0, hashOfTheBlock.length() - j);
             System.out.println(BlockChain.newBlockGenerator(i, timeStamp, hashOfTheBlock, hashOfThePreviousBlock));
             hashOfThePreviousBlock = hashOfTheBlock;
 
@@ -49,13 +60,17 @@ class StringUtil {
 }
 class BlockChain {
     public static String newBlockGenerator (int id, long timeStamp, String hashOfTheBlock, String hashOfThePreviousBlock) {
+        double time = System.nanoTime() / 1000000000.0;
+        long newTime = Math.round(time);
         String str = String.format("Block:\n" +
                 "Id: %d\n" +
                 "Timestamp: %d\n" +
+                "Magic number: %d\n" +
                 "Hash of the previous block: \n" +
                 "%s\n" +
                 "Hash of the block: \n" +
-                "%s", id, timeStamp, hashOfThePreviousBlock, hashOfTheBlock);
+                "%s\n" +
+                "Block was generating for %d seconds", id, timeStamp, ThreadLocalRandom.current().nextLong(Long.MAX_VALUE), hashOfThePreviousBlock, hashOfTheBlock, newTime);
 
         return str;
     }

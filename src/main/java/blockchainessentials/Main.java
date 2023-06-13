@@ -29,13 +29,41 @@ class StringUtil {
         String hashOfThePreviousBlock = "";
         String hashOfTheBlock;
         long timeStamp;
-        String messageLong = """
-                Sarah: It's not fair!
-                Sarah: You always will be first because it is your blockchain!
-                Sarah: Anyway, thank you for this amazing chat.""";
-        String[] listOfMessages = {"no messages", "no messages", "Tom: Hey, I'm first!", messageLong, "Tom: You're welcome :)"};
+        String trans1 = """
+                miner9 sent 30 VC to miner1
+                miner9 sent 30 VC to miner2
+                miner9 sent 30 VC to Nick""";
+        String trans2 = """
+                miner9 sent 10 VC to Bob
+                miner7 sent 10 VC to Alice
+                Nick sent 1 VC to ShoesShop
+                Nick sent 2 VC to FastFood
+                Nick sent 15 VC to CarShop
+                miner7 sent 90 VC to CarShop""";
+        String trans3 = """
+                CarShop sent 10 VC to Worker1
+                CarShop sent 10 VC to Worker2
+                CarShop sent 10 VC to Worker3
+                CarShop sent 30 VC to Director1
+                CarShop sent 45 VC to CarPartsShop
+                Bob sent 5 VC to GamingShop
+                Alice sent 5 VC to BeautyShop""";
+        String trans4 = trans3;
+        String trans5 = trans3;
+        String trans6 = trans3;
+        String trans7 = trans3;
+        String trans8 = trans3;
+        String trans9 = trans3;
+        String trans10 = trans3;
+        String trans11 = trans3;
+        String trans12 = trans3;
+        String trans13 = trans3;
+        String trans14 = trans3;
+        String[] listOfMessages = {"No transactions", trans1, trans2, trans3, trans4, trans5,
+        trans6, trans7, trans8, trans9, trans10,
+        trans11, trans12, trans13, trans14};
         int N = 1;
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 16; i++) {
             timeStamp = new Date().getTime();
 
             if (i == 1) {
@@ -55,9 +83,9 @@ class StringUtil {
 
             System.out.println(BlockChain.newBlockGenerator(i, timeStamp, hashOfTheBlock,
                     hashOfThePreviousBlock, N, magicNumber, listOfMessages[i - 1]));
-            if (i < 3) {
+            if (i < 8) {
                 N++;
-            } else if (i > 3) {
+            } else if (i >8) {
                 N--;
             }
 
@@ -76,8 +104,10 @@ class BlockChain {
         long newTime = Math.round(time);
         String thread = new Thread().getName();
 
+        int i = Integer.parseInt(String.valueOf(thread.charAt(thread.length() - 1)));
         String str = String.format("Block:\n" +
-                        "Created by miner # %d\n" +
+                        "Created by: miner%d\n" +
+                        "miner%d gets 100 VC\n" +
                         "Id: %d\n" +
                         "Timestamp: %d\n" +
                         "Magic number: %d\n" +
@@ -87,12 +117,14 @@ class BlockChain {
                         "%s\n" +
                         "Block data:\n" +
                          "%s\n"+
-                        "Block was generating for %d seconds", Integer.parseInt(String.valueOf(thread.charAt(thread.length() - 1))),
+                        "Block was generating for %d seconds",
+                i,
+                i,
                 id, timeStamp, magicNumber, hashOfThePreviousBlock, hashOfTheBlock, message, newTime);
 
-        if (id < 3) {
+        if (id < 8) {
             str += String.format("\nN was increased to %d", N);
-        } else if (id > 3) {
+        } else if (id > 8) {
             str += "\nN was decreased by 1";
 
         } else {

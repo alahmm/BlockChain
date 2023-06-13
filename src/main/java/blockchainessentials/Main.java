@@ -34,7 +34,7 @@ class StringUtil {
                 Sarah: You always will be first because it is your blockchain!
                 Sarah: Anyway, thank you for this amazing chat.""";
         String[] listOfMessages = {"no messages", "no messages", "Tom: Hey, I'm first!", messageLong, "Tom: You're welcome :)"};
-        int N = 0;
+        int N = 1;
         for (int i = 1; i < 6; i++) {
             timeStamp = new Date().getTime();
 
@@ -44,24 +44,22 @@ class StringUtil {
             }
             String zeros = "";
             int j = 0;
-            while (j < N) {
+            while (j < N - 1) {
                 zeros += 0;
                 j++;
             }
             long magicNumber = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
-            input = input + hashOfThePreviousBlock + timeStamp + magicNumber;
+            input = listOfMessages[i - 1] + hashOfThePreviousBlock + timeStamp + magicNumber;
             hashOfTheBlock = zeros + StringUtil.applySha256(input);
             hashOfTheBlock = hashOfTheBlock.substring(0, hashOfTheBlock.length() - N);
 
-
+            System.out.println(BlockChain.newBlockGenerator(i, timeStamp, hashOfTheBlock,
+                    hashOfThePreviousBlock, N, magicNumber, listOfMessages[i - 1]));
             if (i < 3) {
                 N++;
             } else if (i > 3) {
                 N--;
             }
-
-            System.out.println(BlockChain.newBlockGenerator(i, timeStamp, hashOfTheBlock,
-                    hashOfThePreviousBlock, N, magicNumber, listOfMessages[i - 1]));
 
             hashOfThePreviousBlock = hashOfTheBlock;
 

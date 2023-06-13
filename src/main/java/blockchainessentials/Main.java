@@ -1,29 +1,26 @@
 package blockchainessentials;
+
 import java.security.MessageDigest;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
-
-public class Main {
-}
 
 class StringUtil {
     public static String input;
+
     /* Applies Sha256 to a string and returns a hash. */
-    public static String applySha256(String input){
+    public static String applySha256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             /* Applies sha256 to our input */
             byte[] hash = digest.digest(input.getBytes("UTF-8"));
             StringBuilder hexString = new StringBuilder();
-            for (byte elem: hash) {
+            for (byte elem : hash) {
                 String hex = Integer.toHexString(0xff & elem);
-                if(hex.length() == 1) hexString.append('0');
+                if (hex.length() == 1) hexString.append('0');
                 hexString.append(hex);
             }
             return hexString.toString();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -45,7 +42,7 @@ class StringUtil {
             int j = 0;
             while (j < N) {
                 zeros += 0;
-                j ++;
+                j++;
             }
             input = input + hashOfThePreviousBlock + timeStamp;
             hashOfTheBlock = zeros + StringUtil.applySha256(input);
@@ -66,21 +63,22 @@ class StringUtil {
         }
     }
 }
+
 class BlockChain {
-    public static String newBlockGenerator (int id, long timeStamp, String hashOfTheBlock, String hashOfThePreviousBlock, int N) {
+    public static String newBlockGenerator(int id, long timeStamp, String hashOfTheBlock, String hashOfThePreviousBlock, int N) {
         double time = System.nanoTime() / 1000000000.0;
         long newTime = Math.round(time);
         String thread = new Thread().getName();
         String str = String.format("Block:\n" +
-                "Created by miner # %d\n" +
-                "Id: %d\n" +
-                "Timestamp: %d\n" +
-                "Magic number: %d\n" +
-                "Hash of the previous block: \n" +
-                "%s\n" +
-                "Hash of the block: \n" +
-                "%s\n" +
-                "Block was generating for %d seconds", Integer.parseInt(String.valueOf(thread.charAt(thread.length() - 1))),
+                        "Created by miner # %d\n" +
+                        "Id: %d\n" +
+                        "Timestamp: %d\n" +
+                        "Magic number: %d\n" +
+                        "Hash of the previous block: \n" +
+                        "%s\n" +
+                        "Hash of the block: \n" +
+                        "%s\n" +
+                        "Block was generating for %d seconds", Integer.parseInt(String.valueOf(thread.charAt(thread.length() - 1))),
                 id, timeStamp, ThreadLocalRandom.current().nextLong(Long.MAX_VALUE), hashOfThePreviousBlock, hashOfTheBlock, newTime);
 
         if (id < 3) {
